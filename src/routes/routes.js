@@ -93,10 +93,10 @@ const createTransaction=async (req,res)=>{
 const statsDashboard=async (req,res)=>{
     const userId = req.userId; // Get userId from the request object
     try {
-        const tranGroupedByDate = await Transaction.aggregate([
+        const tranGroupedByDate = await Transaction.aggregate([{ $match: { userId: userId } },
             { $group: { _id: "$date" ,amount:{$sum:"$amount"}} },])
 
-        const expenses=await Transaction.aggregate([{$match:{type:'expense'}},
+        const expenses=await Transaction.aggregate([{$match:{userId: userId,type:'expense'}},
             {$group:{_id:"$tag",amount:{$sum:"$amount"}}}])    
 
         //console.log('transactions in statsDashboard ', transGroupedByDate);
