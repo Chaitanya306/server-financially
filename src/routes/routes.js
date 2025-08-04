@@ -99,11 +99,25 @@ const statsDashboard=async (req,res)=>{
         const expenses=await Transaction.aggregate([{$match:{userId: userId,type:'expense'}},
             {$group:{_id:"$tag",amount:{$sum:"$amount"}}}])    
 
-        //console.log('transactions in statsDashboard ', transGroupedByDate);
+        //console.log('transactions in statsDashboard ', tranGroupedByDate, expenses);
         res.status(200).json({transactionsList:tranGroupedByDate, expensesList:expenses});    
     } catch (error) {
         console.error('Error fetching transactions:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 }
-export {login,signup,home,createTransaction, statsDashboard}
+
+const userDetails=async (req,res)=>{
+    const userId=req.userId
+    try{
+        const user=Usermodel.findOne({_id:userId})
+        const userDetails={name:user.name,email:user.email,number:user.number}
+        return res.status(200).json({userDetails:{...userDetails}})
+    }catch(error){
+        console.log(`error fetching user :${error}`)
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+    
+
+}
+export {login,signup,home,createTransaction, statsDashboard,userDetails}
