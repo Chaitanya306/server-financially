@@ -110,7 +110,8 @@ const statsDashboard=async (req,res)=>{
 const userDetails=async (req,res)=>{
     const userId=req.userId
     try{
-        const user=Usermodel.findOne({_id:userId})
+        const user=await Usermodel.findOne({_id:userId})
+        
         const userDetails={name:user.name,email:user.email,number:user.number}
         return res.status(200).json({userDetails:{...userDetails}})
     }catch(error){
