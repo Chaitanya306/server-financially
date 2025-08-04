@@ -9,16 +9,18 @@ import Transaction from "../models/Transaction.js";
 const login = async (req, res) => {
 
     const { email, password } = req.body
+    
     if (!email || !password) {
         return res.status(400).json({ message: 'Please fill all fields' })
     }
     try {
         const user = await Usermodel.findOne({ email: email })
-        const isPasswordValid = await bcrypt.compare(password, user.password)
+    
+        
         if (!user) {
             return res.status(400).json({ message: 'User does not exist' })
         }
-        
+        const isPasswordValid = await bcrypt.compare(password, user.password)
         if (!isPasswordValid) {
             return res.status(400).json({ message: 'Invalid password' })
         }
@@ -40,11 +42,12 @@ const signup=async (req,res)=>{
     if(!name || !email || !password || !number){
         return res.status(400).json({message:'Please fill all fields'})
     }
-    const existingUser=await Usermodel.find({email:email})
-    if(existingUser.length>0){
-        return res.status(400).json({message:'User already exists'})
-    }
+    
     try {
+        const existingUser = await Usermodel.find({ email: email })
+        if (existingUser.length > 0) {
+            return res.status(400).json({ message: 'User already exists' })
+        }
         const hashCount=10
         const hashedPassword=await bcrypt.hash(password,hashCount)
         const user=await Usermodel.create({
@@ -63,7 +66,7 @@ const signup=async (req,res)=>{
 }
 
 const home=async (req,res)=>{
-    const userId = req.userId; // Get userId from the request object
+    const userId = req.userId; 
     try {
         const transactions = await Transaction.find({ userId: userId });
         console.log('transactions in home ', transactions);
@@ -99,7 +102,7 @@ const statsDashboard=async (req,res)=>{
         const expenses=await Transaction.aggregate([{$match:{userId: userId,type:'expense'}},
             {$group:{_id:"$tag",amount:{$sum:"$amount"}}}])    
 
-        //console.log('transactions in statsDashboard ', tranGroupedByDate, expenses);
+        
         res.status(200).json({transactionsList:tranGroupedByDate, expensesList:expenses});    
     } catch (error) {
         console.error('Error fetching transactions:', error);

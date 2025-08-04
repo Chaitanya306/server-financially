@@ -23,7 +23,7 @@ app.listen(process.env.PORT,()=>{
   console.log(`server listening at ${process.env.PORT}`)
   connectDB()
 })
- */ 
- export default app
+*/ 
+export default app
 
 
