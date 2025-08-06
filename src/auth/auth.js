@@ -13,7 +13,7 @@ const auth = function(req, res, next) {
         console.error('JWT verification failed:', error);
         return res.status(401).json({ message: 'Invalid token' });
     }
-
+    
 }
 
 export default auth;

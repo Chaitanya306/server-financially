@@ -124,4 +124,15 @@ const userDetails=async (req,res)=>{
     
 
 }
-export {login,signup,home,createTransaction, statsDashboard,userDetails}
+
+const deleteTransactions =async (req,res,)=>{
+    const userId=req.userId
+    try {
+        const result=await Transaction.deleteMany({userId:userId})
+        res.status(200).json({message:'Transactions deleted successfully'})
+    } catch (error) {
+        console.log(`error trying to delete :${error}`)
+        res.status(500).json({message:'Internal server error'})
+    }
+}
+export {login,signup,home,createTransaction, statsDashboard,userDetails,deleteTransactions}
